@@ -37,25 +37,6 @@ public class JWTProvider {
                 .compact();
     }
 
-//    public boolean validateToken(String token, UserDetails userDetails) {
-//        return StringUtils.equalsIgnoreCase(getSubject(token), userDetails.getUsername()) && !isTokenExpired(token);
-//    }
-//
-//    public String getSubject(String token) {
-//        return getAllClaims(token).getSubject();
-//    }
-//
-//    private Date getExpirationDate(String token) {
-//        return getAllClaims(token).getExpiration();
-//    }
-//
-//    private Claims getAllClaims(String token) {
-//        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-//    }
-//
-//    private boolean isTokenExpired(String token) {
-//        return getExpirationDate(token).before(new Date());
-//    }
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);

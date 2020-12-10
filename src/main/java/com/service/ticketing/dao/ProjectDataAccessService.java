@@ -3,8 +3,11 @@ package com.service.ticketing.dao;
 
 import com.service.ticketing.models.projects.Project;
 import com.service.ticketing.models.projects.roles.*;
+import com.service.ticketing.models.projects.systems.SubSystem;
+import com.service.ticketing.models.projects.tickets.Ticket;
 import com.service.ticketing.models.response.User;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Repository;
@@ -19,25 +22,58 @@ import java.util.UUID;
 @Repository
 public class ProjectDataAccessService implements ProjectDao {
 
+    @Value("${project.path}")
+    private String filePath;
+
+   public Boolean checkFileExistence() {
+       File dataFile = new File(filePath);
+       return dataFile.exists();
+   }
+
+   public Boolean isFileEmpty(){
+       File dataFile = new File(filePath);
+       return dataFile.length() == 0;
+   }
+
     @Override
     public void saveData(Project projects) throws IOException {
-            FileOutputStream fileOut = new FileOutputStream("/Users/amir/Desktop/ticketing/temp/projects.ser");
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            out.writeObject(projects);
-            out.close();
-            fileOut.close();
-            System.out.printf("Serialized data is saved in /tmp/projects.ser");
+            if(checkFileExistence()) {
+                FileOutputStream fileOut = new FileOutputStream(filePath);
+                ObjectOutputStream out = new ObjectOutputStream(fileOut);
+                out.writeObject(projects);
+                out.close();
+                fileOut.close();
+                System.out.printf("Serialized data is saved in /tmp/projects.ser");
+            }
+            else{
+                File newFile = new File(filePath);
+                newFile.createNewFile();
+                saveData(projects);
+            }
     }
-
 
     @Override
     public Project fetchData() throws IOException, ClassNotFoundException {
-        FileInputStream fileIn = new FileInputStream("/Users/amir/Desktop/ticketing/temp/projects.ser");
-        ObjectInputStream in = new ObjectInputStream(fileIn);
-        Project projects = (Project) in.readObject();
-        in.close();
-        fileIn.close();
-        return projects;
+        if(checkFileExistence() && !isFileEmpty()) {
+            FileInputStream fileIn = new FileInputStream(filePath);
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            Project projects = (Project) in.readObject();
+            in.close();
+            fileIn.close();
+            return projects;
+        }
+        else if(checkFileExistence() && isFileEmpty()){
+            Project projects = new Project(new LinkedList<>(), new LinkedList<>(), new LinkedList<>(),
+                    new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
+            saveData(projects);
+            return projects;
+        }
+        else if(!checkFileExistence()){
+            File newFile = new File(filePath);
+            newFile.createNewFile();
+            return fetchData();
+        }
+        return null;
     }
 
     @Override
@@ -124,7 +160,7 @@ public class ProjectDataAccessService implements ProjectDao {
             }
         }
 
-        if(username == "ADMIN"){
+        if(username == "admin"){
             Collection<GrantedAuthority> roles = new ArrayList<>();
             roles.add(new SimpleGrantedAuthority(Constants.ADMIN));
             return new User(username,username,roles, UUID.fromString("1"),UUID.fromString("1"));
@@ -205,5 +241,20 @@ public class ProjectDataAccessService implements ProjectDao {
     @Override
     public UUID loadSystemByUsername(String username) throws IOException, ClassNotFoundException {
         return loadUserByUsername(username).getSystem();
+    }
+
+    @Override
+    public SubSystem addSubSystem(SubSystem subSystem) throws IOException, ClassNotFoundException {
+        Project project = fetchData();
+        SubSystem newSubSystem = new SubSystem(subSystem.getName(),subSystem.getCompleted());
+        LinkedList<SubSystem> subSystems = project.getSubSystems();
+        subSystems.add(newSubSystem);
+        project.setSubSystems(subSystems);
+        return newSubSystem;
+    }
+
+    @Override
+    public Ticket createTicketAsCustomer(Ticket ticket, String username) {
+        return null;
     }
 }

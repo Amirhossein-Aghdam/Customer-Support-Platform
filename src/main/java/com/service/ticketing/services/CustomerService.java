@@ -2,6 +2,7 @@ package com.service.ticketing.services;
 
 import com.service.ticketing.dao.ProjectDao;
 import com.service.ticketing.models.projects.roles.Customer;
+import com.service.ticketing.models.projects.tickets.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -21,5 +22,9 @@ public class CustomerService {
     //create new customer
     public Customer addCustomer(Customer customer) throws IOException, ClassNotFoundException {
         return projectDao.addCustomer(customer);
+    }
+
+    public Ticket createTicketAsCustomer(Ticket ticket, String username){
+        return projectDao.createTicketAsCustomer(ticket, username);
     }
 }

@@ -6,11 +6,12 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class SubSystem implements Serializable {
-    @Autowired
+
     UUID id;
     String name;
     Boolean completed;
 
+    @Autowired
     public SubSystem(String name, Boolean completed) {
         this.id=UUID.randomUUID();
         this.name = name;

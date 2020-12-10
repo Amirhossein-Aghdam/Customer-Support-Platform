@@ -2,6 +2,8 @@ package com.service.ticketing.dao;
 
 import com.service.ticketing.models.projects.Project;
 import com.service.ticketing.models.projects.roles.*;
+import com.service.ticketing.models.projects.systems.SubSystem;
+import com.service.ticketing.models.projects.tickets.Ticket;
 import com.service.ticketing.models.response.User;
 
 import java.io.IOException;
@@ -39,4 +41,8 @@ public interface ProjectDao {
 
     //Manager eligibility check to create Roles
     UUID loadSystemByUsername(String username) throws IOException, ClassNotFoundException;
+
+    SubSystem addSubSystem(SubSystem subSystem) throws IOException, ClassNotFoundException;
+
+    Ticket createTicketAsCustomer(Ticket ticket, String username);
 }

@@ -20,17 +20,16 @@ public class Ticket implements Serializable {
     public Ticket() {
     }
 
-    public Ticket(UUID id, String issueTitle, Boolean status, String system, Date openedDate,
-                  Date closedDate, UUID openedBy, UUID closeBy, LinkedList<Message> messages) {
-        this.id = id;
+    public Ticket(String issueTitle, String system, UUID openedBy) {
+        this.id = UUID.randomUUID();
         this.issueTitle = issueTitle;
-        this.status = status;
+        this.status = true;
         this.system = system;
-        this.openedDate = openedDate;
-        this.closedDate = closedDate;
+        this.openedDate = new Date();
+        this.closedDate = null;
         this.openedBy = openedBy;
-        this.closeBy = closeBy;
-        this.messages = messages;
+        this.closeBy = null;
+        this.messages = new LinkedList<>();
     }
 
     public UUID getId() {

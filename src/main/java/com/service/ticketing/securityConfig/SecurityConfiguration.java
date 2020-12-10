@@ -22,18 +22,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Qualifier("JWTUserDetailsService")
 
+    @Autowired
+    @Qualifier("JWTUserDetailsService")
     private UserDetailsService jwtUserDetailsService;
 
-
+    @Autowired
     private JWTRequestFilter jwtRequestFilter;
 
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder())
-        .and().inMemoryAuthentication().withUser("admin").password("admin").roles("ADMIN");
+        auth.userDetailsService(jwtUserDetailsService).passwordEncoder(passwordEncoder());
     }
 
     @Bean
@@ -67,7 +67,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/login", "/api/register").permitAll()
                 .anyRequest().authenticated()
                 .and()
-//                .exceptionHandling().authenticationEntryPoint().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }

@@ -1,7 +1,6 @@
 package com.service.ticketing.models.projects.roles;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.service.ticketing.models.projects.systems.SubSystem;
 import com.service.ticketing.models.projects.tickets.Ticket;
 import org.springframework.beans.factory.annotation.Autowired;
 

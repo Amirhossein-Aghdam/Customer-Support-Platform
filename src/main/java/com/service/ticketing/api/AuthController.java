@@ -53,7 +53,8 @@ public class AuthController {
 
         UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
         AuthResponse response = new AuthResponse(jwtTokenUtil.generateToken(userDetails)
-                , username, dataService.loadRoleByUsername(username));
+                , username, dataService.loadRoleByUsername(username)
+                , dataService.loadUserByUsername(username).getId());
 
         return ResponseEntity.ok(response);
     }
