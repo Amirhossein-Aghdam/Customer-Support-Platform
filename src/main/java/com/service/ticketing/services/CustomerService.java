@@ -24,7 +24,7 @@ public class CustomerService {
         return projectDao.addCustomer(customer);
     }
 
-    public Ticket createTicketAsCustomer(Ticket ticket, String username){
+    public Ticket createTicketAsCustomer(Ticket ticket, String username) throws IOException, ClassNotFoundException {
         return projectDao.createTicketAsCustomer(ticket, username);
     }
 }

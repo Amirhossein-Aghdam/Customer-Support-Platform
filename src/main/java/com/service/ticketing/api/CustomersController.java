@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.RolesAllowed;
 import java.io.IOException;
 
 @RequestMapping("api/customer")
@@ -35,7 +36,7 @@ public class CustomersController {
     }
 
     @PostMapping("create/ticket")
-    public Ticket createTicket(@RequestHeader("Authorization") String header, @RequestBody Ticket ticket){
+    public Ticket createTicket(@RequestHeader("Authorization") String header, @RequestBody Ticket ticket) throws IOException, ClassNotFoundException {
         String token = header.replace(TOKEN_PREFIX, "");
         String username = jwtProvider.getUsernameFromToken(token);
         return customerService.createTicketAsCustomer(ticket, username);

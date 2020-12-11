@@ -9,15 +9,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class AdminController {
 
-    private final AdminController adminController;
-
-    @Autowired
-    public AdminController(AdminController adminController) {
-        this.adminController = adminController;
-    }
-
-    @PostMapping("createSubSystem")
-    public SubSystem addSubSystem(@RequestBody SubSystem subSystem){
-        return  adminController.addSubSystem(subSystem);
-    }
+//    private final AdminController adminController;
+//
+//    @Autowired
+//    public AdminController(AdminController adminController) {
+//        this.adminController = adminController;
+//    }
+//
+//    @PostMapping("createSubSystem")
+//    public SubSystem addSubSystem(@RequestBody SubSystem subSystem){
+//        return  adminController.addSubSystem(subSystem);
+//    }
 }

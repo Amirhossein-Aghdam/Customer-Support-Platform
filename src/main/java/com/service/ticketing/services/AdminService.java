@@ -10,9 +10,10 @@ import java.io.IOException;
 @Service
 public class AdminService {
 
-    @Autowired
+
     private final ProjectDao projectDao;
 
+    @Autowired
     public AdminService(ProjectDao projectDao) {
         this.projectDao = projectDao;
     }

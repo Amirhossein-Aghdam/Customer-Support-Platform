@@ -1,6 +1,5 @@
 package com.service.ticketing.securityConfig.JWT;
 
-import com.service.ticketing.dao.ProjectDao;
 import com.service.ticketing.services.DataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("login")
 public class AuthController {
     Logger logger = LoggerFactory.getLogger(AuthController.class);
 
@@ -34,7 +34,7 @@ public class AuthController {
     @Autowired
     private DataService dataService;
 
-    @PostMapping("login")
+    @PostMapping
     public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthRequest authenticationRequest)
             throws IOException, ClassNotFoundException {
 

@@ -10,24 +10,22 @@ public class Ticket implements Serializable {
     UUID id;
     String issueTitle;
     Boolean status;
-    String system;
+    UUID system;
     Date openedDate;
     Date closedDate;
     UUID openedBy;
     UUID closeBy;
     LinkedList<Message> messages;
 
-    public Ticket() {
-    }
 
-    public Ticket(String issueTitle, String system, UUID openedBy) {
+    public Ticket(String issueTitle) {
         this.id = UUID.randomUUID();
         this.issueTitle = issueTitle;
         this.status = true;
-        this.system = system;
+        this.system = null;
         this.openedDate = new Date();
         this.closedDate = null;
-        this.openedBy = openedBy;
+        this.openedBy = null;
         this.closeBy = null;
         this.messages = new LinkedList<>();
     }
@@ -52,11 +50,11 @@ public class Ticket implements Serializable {
         this.status = status;
     }
 
-    public String getSystem() {
+    public UUID getSystem() {
         return system;
     }
 
-    public void setSystem(String system) {
+    public void setSystem(UUID system) {
         this.system = system;
     }
 

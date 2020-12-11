@@ -44,5 +44,5 @@ public interface ProjectDao {
 
     SubSystem addSubSystem(SubSystem subSystem) throws IOException, ClassNotFoundException;
 
-    Ticket createTicketAsCustomer(Ticket ticket, String username);
+    Ticket createTicketAsCustomer(Ticket ticket, String username) throws IOException, ClassNotFoundException;
 }

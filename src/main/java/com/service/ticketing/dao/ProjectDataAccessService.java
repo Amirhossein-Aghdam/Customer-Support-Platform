@@ -25,6 +25,12 @@ public class ProjectDataAccessService implements ProjectDao {
     @Value("${project.path}")
     private String filePath;
 
+    @Value("${admin.username}")
+    private String adminUsername;
+
+    @Value("${admin.password}")
+    private String adminPassword;
+
    public Boolean checkFileExistence() {
        File dataFile = new File(filePath);
        return dataFile.exists();
@@ -54,20 +60,23 @@ public class ProjectDataAccessService implements ProjectDao {
 
     @Override
     public Project fetchData() throws IOException, ClassNotFoundException {
-        if(checkFileExistence() && !isFileEmpty()) {
-            FileInputStream fileIn = new FileInputStream(filePath);
-            ObjectInputStream in = new ObjectInputStream(fileIn);
-            Project projects = (Project) in.readObject();
-            in.close();
-            fileIn.close();
-            return projects;
+        if(checkFileExistence()) {
+            if(!isFileEmpty()) {
+                FileInputStream fileIn = new FileInputStream(filePath);
+                ObjectInputStream in = new ObjectInputStream(fileIn);
+                Project projects = (Project) in.readObject();
+                in.close();
+                fileIn.close();
+                return projects;
+            }
+            else{
+                Project projects = new Project(new LinkedList<>(), new LinkedList<>(), new LinkedList<>(),
+                        new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
+                saveData(projects);
+                return projects;
+            }
         }
-        else if(checkFileExistence() && isFileEmpty()){
-            Project projects = new Project(new LinkedList<>(), new LinkedList<>(), new LinkedList<>(),
-                    new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
-            saveData(projects);
-            return projects;
-        }
+
         else if(!checkFileExistence()){
             File newFile = new File(filePath);
             newFile.createNewFile();
@@ -160,10 +169,12 @@ public class ProjectDataAccessService implements ProjectDao {
             }
         }
 
-        if(username == "admin"){
+        if(username.equals(adminUsername)){
             Collection<GrantedAuthority> roles = new ArrayList<>();
             roles.add(new SimpleGrantedAuthority(Constants.ADMIN));
-            return new User(username,username,roles, UUID.fromString("1"),UUID.fromString("1"));
+            return new User(adminUsername, adminPassword, roles
+                    , UUID.fromString("318758ee-c4d1-4974-af2e-d763cc480a3b")
+                    ,UUID.fromString("d3cdfdf5-9d90-4559-a040-ba77fe1f10c3"));
         }
 
         //that's ok if there's no such a user, tell him!
@@ -254,7 +265,22 @@ public class ProjectDataAccessService implements ProjectDao {
     }
 
     @Override
-    public Ticket createTicketAsCustomer(Ticket ticket, String username) {
-        return null;
+    public Ticket createTicketAsCustomer(Ticket ticket, String username) throws IOException, ClassNotFoundException {
+       User user = loadUserByUsername(username);
+       Ticket newTicket = new Ticket(ticket.getIssueTitle());
+        newTicket.setSystem(user.getSystem());
+        newTicket.setOpenedBy(user.getId());
+        Project project = fetchData();
+        LinkedList<Customer> customers = project.getCustomers();
+        for(Customer customer: customers){
+            if(customer.getUsername().equals(username)){
+                LinkedList<Ticket> issues = customer.getIssues();
+                issues.add(newTicket);
+                customer.setIssues(issues);
+            }
+        }
+        project.setCustomers(customers);
+        saveData(project);
+        return newTicket;
     }
 }
